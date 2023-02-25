@@ -25,7 +25,7 @@ fig6 = go.Figure(data=go.Pie(labels=t6.index, values=t6), layout=go.Layout(title
 
 nav = Navbar()
 
-total_sales = pd.read_csv('C:/Users/ukrse/OneDrive/Документы/Israel_IT/Project/processed_csv/Total_sales.csv', parse_dates = True, index_col = 0)
+total_sales = pd.read_csv('./processed_csv/Total_sales.csv', parse_dates = True, index_col = 0)
 
 body = dbc.Container(
     [
