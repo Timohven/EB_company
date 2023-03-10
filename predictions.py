@@ -116,29 +116,28 @@ def build_model(selected_model, selected_period):
     print('selected_model->', selected_model)
     t1 = total_sales[total_sales['ModelName'] == selected_model]['OrderQuantity'].resample(selected_period).sum()
     #print(t1)
-    t2 = total_sales[total_sales['ModelName'] == selected_model]['Sale'].resample(selected_period).sum()
-    #print(t2)
-    trace1 = go.Scatter(x=t1.index, y=t1, name=selected_model)
-    trace2 = go.Scatter(x=t2.index, y=t2, name='Sales')
-    layout = go.Layout(title='Total ' + selected_model)
-    #fig = go.Figure(data=trace, layout=layout)
-    #fig = go.Figure(layout=layout)
+    #t2 = total_sales[total_sales['ModelName'] == selected_model]['Sale'].resample(selected_period).sum()
+    decompose_result_mult = seasonal_decompose(t1, model="multiplicative")
+    trend = decompose_result_mult.trend
+    seasonal = decompose_result_mult.seasonal
+
+    layout = go.Layout(title='Total sales: ' + selected_model)
     fig = make_subplots(specs=[[{"secondary_y": True}]])
     fig.add_trace(
-        go.Scatter(x=t1.index, y=t1, name=selected_model),
+        go.Scatter(x=t1.index, y=t1, name='Quantity', line_shape='spline'),
         secondary_y=False,
     )
-
     fig.add_trace(
-        go.Scatter(x=t2.index, y=t2, name='Sales'),
+        go.Scatter(x=seasonal.index, y=seasonal, name='Seasonal coef', line_shape='spline'),
         secondary_y=True,
     )
-    # fig.add_trace(trace1, secondary_y=False)
-    # fig.add_trace(trace2, secondary_y=True)
+
     fig.update_layout(layout)
-    # fig.update_yaxes(title_text="<b>primary</b> yaxis title", secondary_y=False)
-    # fig.update_yaxes(title_text="<b>secondary</b> yaxis title", secondary_y=True)
+    fig.update_yaxes(title_text="Quantity", secondary_y=False)
+    fig.update_yaxes(title_text="Seasonal coef", secondary_y=True)
     return fig
 
-
-
+def build_pred(selected_model, for_period):
+    print('for_period->', for_period)
+    print('selected_model->', selected_model)
+    return 0

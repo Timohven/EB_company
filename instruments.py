@@ -115,8 +115,8 @@ def build_season(selected_product):
     trend = decompose_result_mult.trend
     seasonal = decompose_result_mult.seasonal
     season = make_subplots(specs=[[{"secondary_y": True}]])
-    trace1 = go.Scatter(x=seasonal.index, y=seasonal, name='seasonal coef')
-    trace2 = go.Scatter(x=t1.index, y=t1, name='quantity')
+    trace1 = go.Scatter(x=seasonal.index, y=seasonal, name='seasonal coef', line_shape='spline')
+    trace2 = go.Scatter(x=t1.index, y=t1, name='quantity', line_shape='spline')
     layout = go.Layout(title='seasonal:'+selected_product)
     season.add_trace(trace1, secondary_y=False)
     season.add_trace(trace2, secondary_y=True)
@@ -125,8 +125,8 @@ def build_season(selected_product):
     season.update_yaxes(title_text='quantity', secondary_y=True)
 
     tr = make_subplots(specs=[[{"secondary_y": True}]])
-    trace1 = go.Scatter(x=trend.index, y=trend, name='trend')
-    trace2 = go.Scatter(x=t2.index, y=t2, name='sales')
+    trace1 = go.Scatter(x=trend.index, y=trend, name='trend', line_shape='spline')
+    trace2 = go.Scatter(x=t2.index, y=t2, name='sales', line_shape='spline')
     layout = go.Layout(title='trend:' + selected_product)
     tr.add_trace(trace1, secondary_y=False)
     tr.add_trace(trace2, secondary_y=True)

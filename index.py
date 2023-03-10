@@ -10,7 +10,7 @@ from instruments import Instruments, build_season, build_subcat, build_prod
 from product import Product
 from store import Store
 from other import Other
-from predictions import Predictions, build_model
+from predictions import Predictions, build_model, build_pred
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.UNITED])
 server = app.server
@@ -91,9 +91,11 @@ def update_season(selected_product):
 @app.callback(
     dash.dependencies.Output('hist', 'figure'),
     [dash.dependencies.Input('model', 'value'),
-    dash.dependencies.Input('perd_period', 'value')])
-def update_model(selected_model, selected_period):
+    dash.dependencies.Input('perd_period', 'value'),
+    dash.dependencies.Input('for_period', 'value')])
+def update_model(selected_model, selected_period, for_period):
     graph = build_model(selected_model, selected_period)
+    res = build_pred(selected_model, for_period)
     return graph
 
 if __name__ == '__main__':
