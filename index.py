@@ -1,6 +1,7 @@
 import dash
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import Dash, html, dcc
+#import dash_core_components as dcc
+#import dash_html_components as html
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
 from app import App#, build_graphfrom
@@ -8,6 +9,8 @@ from homepage import Homepage, build_main
 from instruments import Instruments, build_season, build_subcat, build_prod
 from product import Product
 from store import Store
+from other import Other
+from predictions import Predictions, build_model
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.UNITED])
 server = app.server
@@ -31,6 +34,10 @@ def display_page(pathname):
         return Product()
     elif pathname == '/store':
         return Store()
+    elif pathname == '/other':
+        return Other()
+    elif pathname == '/predictions':
+        return Predictions()
     else:
         return Homepage()
 
@@ -80,6 +87,14 @@ def update_season(selected_product):
 #     print(selected_product)
 #     #graph = build_figure2(selected_category, selected_subcategory, selected_product)
 #     return selected_product
+
+@app.callback(
+    dash.dependencies.Output('hist', 'figure'),
+    [dash.dependencies.Input('model', 'value'),
+    dash.dependencies.Input('perd_period', 'value')])
+def update_model(selected_model, selected_period):
+    graph = build_model(selected_model, selected_period)
+    return graph
 
 if __name__ == '__main__':
     app.run_server(debug=True)

@@ -5,6 +5,7 @@ import dash_html_components as html
 import pandas as pd
 from statsmodels.tsa.seasonal import seasonal_decompose
 import plotly.graph_objs as go
+from plotly.subplots import make_subplots
 from navbar import Navbar
 
 nav = Navbar()
@@ -77,7 +78,7 @@ body = dbc.Container(
         ),
         dbc.Row(
             [
-                html.H2('Seasonality for the product:'),
+                # html.H2('Seasonality for the product:'),
                 #dcc.Textarea(id='text'),
                 dcc.Graph(id='season'),
                 dcc.Graph(id='trend')
@@ -108,12 +109,31 @@ def build_prod(selected_subcategory):
     return t3
 
 def build_season(selected_product):
-    t = total_sales[total_sales['ProductName'] == selected_product]['OrderQuantity'].resample('M').sum()
-    decompose_result_mult = seasonal_decompose(t, model="multiplicative")
+    t1 = total_sales[total_sales['ProductName'] == selected_product]['OrderQuantity'].resample('M').sum()
+    t2 = total_sales[total_sales['ProductName'] == selected_product]['Sale'].resample('M').sum()
+    decompose_result_mult = seasonal_decompose(t1, model="multiplicative")
     trend = decompose_result_mult.trend
     seasonal = decompose_result_mult.seasonal
-    season = go.Figure(data=go.Scatter(x=seasonal.index, y=seasonal), layout=go.Layout(title='season'))
-    tr = go.Figure(data=go.Scatter(x=trend.index, y=trend), layout=go.Layout(title='trend'))
+    season = make_subplots(specs=[[{"secondary_y": True}]])
+    trace1 = go.Scatter(x=seasonal.index, y=seasonal, name='seasonal coef')
+    trace2 = go.Scatter(x=t1.index, y=t1, name='quantity')
+    layout = go.Layout(title='seasonal:'+selected_product)
+    season.add_trace(trace1, secondary_y=False)
+    season.add_trace(trace2, secondary_y=True)
+    season.update_layout(layout)
+    season.update_yaxes(title_text='seasonal coef', secondary_y=False)
+    season.update_yaxes(title_text='quantity', secondary_y=True)
+
+    tr = make_subplots(specs=[[{"secondary_y": True}]])
+    trace1 = go.Scatter(x=trend.index, y=trend, name='trend')
+    trace2 = go.Scatter(x=t2.index, y=t2, name='sales')
+    layout = go.Layout(title='trend:' + selected_product)
+    tr.add_trace(trace1, secondary_y=False)
+    tr.add_trace(trace2, secondary_y=True)
+    tr.update_layout(layout)
+    tr.update_yaxes(title_text='trend', secondary_y=False)
+    tr.update_yaxes(title_text='sales', secondary_y=True)
+
     return season, tr
 
 

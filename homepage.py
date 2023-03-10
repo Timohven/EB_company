@@ -9,7 +9,7 @@ import plotly.graph_objs as go
 from navbar import Navbar
 nav = Navbar()
 
-total_sales = pd.read_csv('./processed_csv/Total_sales.csv', parse_dates = True, index_col = 0)
+total_sales = pd.read_csv('./processed_csv/Total_sales.csv', parse_dates=True, index_col=0)
 period = ['D', 'W', 'M', '6M']
 category = total_sales['CategoryName'].unique()
 index = ['Sale', 'Profit']
