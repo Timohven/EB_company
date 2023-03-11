@@ -1,4 +1,4 @@
-pip install sktime
+sktime[all_extras]
 gunicorn==20.0.4
 Brotli==1.0.9
 click==8.1.3
