@@ -89,14 +89,15 @@ def update_season(selected_product):
 #     return selected_product
 
 @app.callback(
-    dash.dependencies.Output('hist', 'figure'),
-    [dash.dependencies.Input('model', 'value'),
+    [dash.dependencies.Output('hist', 'figure'),
+    dash.dependencies.Output('pred', 'figure')],
+    [dash.dependencies.Input('pro', 'value'),
     dash.dependencies.Input('perd_period', 'value'),
     dash.dependencies.Input('for_period', 'value')])
-def update_model(selected_model, selected_period, for_period):
-    graph = build_model(selected_model, selected_period)
-    res = build_pred(selected_model, for_period)
-    return graph
+def update_model(selected_product, selected_period, for_period):
+    graph = build_model(selected_product, selected_period)
+    graph2 = build_pred(selected_product, selected_period, for_period)
+    return graph, graph2
 
 if __name__ == '__main__':
     app.run_server(debug=True)
