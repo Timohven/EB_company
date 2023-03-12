@@ -111,7 +111,9 @@ def build_prod(selected_subcategory):
 def build_season(selected_product):
     t1 = total_sales[total_sales['ProductName'] == selected_product]['OrderQuantity'].resample('M').sum()
     t2 = total_sales[total_sales['ProductName'] == selected_product]['Sale'].resample('M').sum()
-    decompose_result_mult = seasonal_decompose(t1, model="multiplicative")
+    per = int((t1.count()/2).round(0))
+    print('freq: ', per)
+    decompose_result_mult = seasonal_decompose(t1, model="multiplicative", period=per)
     trend = decompose_result_mult.trend
     seasonal = decompose_result_mult.seasonal
     season = make_subplots(specs=[[{"secondary_y": True}]])
